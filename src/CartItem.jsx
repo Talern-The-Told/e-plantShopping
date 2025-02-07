@@ -51,6 +51,16 @@ const CartItem = ({ onContinueShopping}) => {
 
 
     return totalAmount
+  
+  
+  };
+
+  
+  const calculateTotalQuantity = () => {
+    let totalQuantity = 0
+    cart.forEach((item) => {
+      totalQuantity += item.quantity;
+  })
   };
 
   return (
