@@ -1,10 +1,14 @@
 import React, { useState,useEffect } from 'react';
+import {useDispatch} from 'react-redux'
 import './ProductList.css'
 import CartItem from './CartItem';
+import {addItem, removeItem, updateQuantity} from './CartSlice';
+
 function ProductList() {
     const [showCart, setShowCart] = useState(false); 
     const [showPlants, setShowPlants] = useState(false); // State to control the visibility of the About Us page
-
+    const [addedToCart, setAddedToCart] = useState(false)
+    const dispatch = useDispatch();
     const plantsArray = [
         {
             category: "Air Purifying Plants",
@@ -242,10 +246,22 @@ const handlePlantsClick = (e) => {
     setShowCart(false); // Hide the cart when navigating to About Us
 };
 
-   const handleContinueShopping = (e) => {
+const handleContinueShopping = (e) => {
     e.preventDefault();
     setShowCart(false);
+    //return <CartItem onContinueShopping={() => setShowCart(false)} />
   };
+
+const handleAddToCart = (product) => {
+    dispatch(addItem(product))
+    setAddedToCart((prevState) =>( {
+        ...prevState,
+        [product.name]: true
+    }))
+}
+
+
+
     return (
         <div>
              <div className="navbar" style={styleObj}>
@@ -268,6 +284,24 @@ const handlePlantsClick = (e) => {
         </div>
         {!showCart? (
         <div className="product-grid">
+            {plantsArray.map((category, index) => (
+                <div key = {index}>
+                    <h1><div>{category.category}</div></h1>
+                        <div className="product-list">
+                        {category.plants.map((plant, plantIndex) => (
+                        <div className = "product-card" key = {plantIndex}>
+                            <img className = 'product-image' src={plant.image} alt={plant.name}/>
+                            <div className='product-title'>{plant.name}</div>
+                            {!addedToCart[plant.name] ? <button  className="product-button" onClick={() => handleAddToCart(plant)}>Add to Cart</button> : 'Added to Cart'}
+                            
+                        </div>
+                        
+                    ))}
+                        </div>
+                        
+                </div>
+
+            ))}
 
 
         </div>

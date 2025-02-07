@@ -1,35 +1,56 @@
 import React from 'react';
 import { useSelector, useDispatch } from 'react-redux';
-import { removeItem, updateQuantity } from './CartSlice';
+import { addItem, removeItem, decrementItem, updateQuantity } from './CartSlice';
 import './CartItem.css';
+import { useState,useEffect } from 'react';
+import handleContinueShopping from './ProductList'
 
-const CartItem = ({ onContinueShopping }) => {
+
+
+const CartItem = ({ onContinueShopping}) => {
   const cart = useSelector(state => state.cart.items);
-  const dispatch = useDispatch();
+  const dispatch = useDispatch()
+
+  const handleContinueShopping = (e) => {
+    dispatch(onContinueShopping(e))
+  };
 
   // Calculate total amount for all products in the cart
   const calculateTotalAmount = () => {
+    let totalCost = 0
+    cart.forEach((item) => {
+      const itemCost = parseFloat(item.cost.replace('$', ''))
+      totalCost += itemCost * item.quantity;
+      console.log(itemCost)
+      
+    });
+
+    return totalCost
+    
+  
  
   };
 
-  const handleContinueShopping = (e) => {
-   
-  };
-
-
-
   const handleIncrement = (item) => {
+    dispatch(addItem(item))
   };
 
   const handleDecrement = (item) => {
-   
+    dispatch(decrementItem(item))
   };
 
   const handleRemove = (item) => {
+    dispatch(removeItem(item))
   };
 
   // Calculate total cost based on quantity for an item
   const calculateTotalCost = (item) => {
+    let totalAmount = 0
+    const itemCost = parseFloat(item.cost.replace('$', ''))
+    totalAmount = itemCost * item.quantity
+
+
+    return totalAmount
   };
 
   return (
@@ -53,7 +74,7 @@ const CartItem = ({ onContinueShopping }) => {
           </div>
         ))}
       </div>
-      <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'></div>
+      <div style={{ marginTop: '20px', color: 'black' }} className='total_cart_amount'>hello</div>
       <div className="continue_shopping_btn">
         <button className="get-started-button" onClick={(e) => handleContinueShopping(e)}>Continue Shopping</button>
         <br />
